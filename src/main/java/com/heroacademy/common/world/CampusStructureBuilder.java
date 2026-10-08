@@ -64,37 +64,56 @@ public class CampusStructureBuilder {
         BUILD_QUEUE.add(new BuildStep("Praça Monumental e Fonte Central", CampusBuildings::buildPlaza));
         BUILD_QUEUE.add(new BuildStep("Muralha Perimetral e Portão Sul", CampusBuildings::buildPerimeterWall));
 
-        // 2. Grandes Estruturas Centrais
+        // 2. Cordilheira Montanhosa Circundante do Vale Imperial
+        BUILD_QUEUE.add(new BuildStep("Cordilheira Montanhosa (Ala Norte)", kit -> CampusBuildings.buildMountains(kit, 0)));
+        BUILD_QUEUE.add(new BuildStep("Cordilheira Montanhosa (Ala Sul)", kit -> CampusBuildings.buildMountains(kit, 1)));
+        BUILD_QUEUE.add(new BuildStep("Cordilheira Montanhosa (Ala Oeste)", kit -> CampusBuildings.buildMountains(kit, 2)));
+        BUILD_QUEUE.add(new BuildStep("Cordilheira Montanhosa (Ala Leste)", kit -> CampusBuildings.buildMountains(kit, 3)));
+        BUILD_QUEUE.add(new BuildStep("Barreira Arcana das Montanhas", CampusBuildings::buildBarrier));
+        BUILD_QUEUE.add(new BuildStep("Trilha do Portão Sul e Mirante", CampusBuildings::buildSouthPass));
+
+        // 3. Relevos Naturais e Jardins
+        BUILD_QUEUE.add(new BuildStep("Relevos e Colinas Naturais (Norte)", kit -> CampusBuildings.buildRelief(kit, -170, -60)));
+        BUILD_QUEUE.add(new BuildStep("Relevos e Colinas Naturais (Centro)", kit -> CampusBuildings.buildRelief(kit, -60, 50)));
+        BUILD_QUEUE.add(new BuildStep("Relevos e Colinas Naturais (Sul)", kit -> CampusBuildings.buildRelief(kit, 50, 160)));
+        BUILD_QUEUE.add(new BuildStep("Relevos e Colinas Naturais (Docas)", kit -> CampusBuildings.buildRelief(kit, 160, 250)));
+        BUILD_QUEUE.add(new BuildStep("Relevos e Terraços dos Jardins", CampusBuildings::buildTerraces));
+        BUILD_QUEUE.add(new BuildStep("Jardins Vivos, Lagos e Gazebos", CampusBuildings::buildGardensAndPonds));
+
+        // 4. Grandes Estruturas Centrais
         BUILD_QUEUE.add(new BuildStep("Grande Hall Imperial", CampusBuildings::buildGrandHall));
         BUILD_QUEUE.add(new BuildStep("Torre do Relógio Imperial", CampusBuildings::buildClockTower));
         BUILD_QUEUE.add(new BuildStep("Grande Biblioteca Imperial", CampusBuildings::buildLibrary));
         BUILD_QUEUE.add(new BuildStep("Grande Refeitório Imperial", CampusBuildings::buildFoodHall));
 
-        // 3. Ciências e Estudo
+        // 5. Ciências e Estudo
         BUILD_QUEUE.add(new BuildStep("Laboratório de Ciência Mágica & Alquimia", CampusBuildings::buildLab));
         BUILD_QUEUE.add(new BuildStep("Estufa Botânica Arcana", CampusBuildings::buildGreenhouse));
         BUILD_QUEUE.add(new BuildStep("Bloco Acadêmico (4 Salas de Aula)", CampusBuildings::buildAcademicBlock));
 
-        // 4. Treinamento e Esportes
+        // 6. Treinamento e Esportes
         BUILD_QUEUE.add(new BuildStep("Dojo & Departamento Marcial", CampusBuildings::buildDojo));
         BUILD_QUEUE.add(new BuildStep("Complexo Esportivo & Arena", CampusBuildings::buildSportsArena));
 
-        // 5. Residências
+        // 7. Grandes Monumentos e Símbolos de Poder
+        BUILD_QUEUE.add(new BuildStep("Grandes Monumentos e Espada Sagrada", CampusBuildings::buildMonuments));
+
+        // 8. Residências
         BUILD_QUEUE.add(new BuildStep("Alojamentos & Dormitórios", CampusBuildings::buildDorms));
 
-        // 6. Docas e Portal
+        // 9. Docas e Portal
         BUILD_QUEUE.add(new BuildStep("Docas do Dirigível & Portal de Retorno", CampusBuildings::buildDocks));
 
-        // 7. Paisagismo
+        // 10. Paisagismo
         BUILD_QUEUE.add(new BuildStep("Paisagismo e Bosques (Norte)", kit -> CampusBuildings.buildLandscaping(kit, -170, -60)));
         BUILD_QUEUE.add(new BuildStep("Paisagismo e Bosques (Centro)", kit -> CampusBuildings.buildLandscaping(kit, -60, 50)));
         BUILD_QUEUE.add(new BuildStep("Paisagismo e Bosques (Sul)", kit -> CampusBuildings.buildLandscaping(kit, 50, 160)));
         BUILD_QUEUE.add(new BuildStep("Paisagismo e Bosques (Docas)", kit -> CampusBuildings.buildLandscaping(kit, 160, 250)));
 
-        // 8. Terminais de Trânsito Tecnológico
+        // 11. Terminais de Trânsito Tecnológico
         BUILD_QUEUE.add(new BuildStep("Terminais de Trânsito Imperial", CampusBuildings::placeTransitTerminals));
 
-        // 9. Finalização
+        // 12. Finalização
         BUILD_QUEUE.add(new BuildStep("Finalização do Campus", kit -> kit.set(MARKER_POS, Blocks.GOLD_BLOCK)));
 
         totalSteps = BUILD_QUEUE.size();

@@ -318,4 +318,178 @@ public class BlockKit {
             }
         }
     }
+
+    /** Gera uma cordilheira montanhosa natural em uma faixa retangular em torno das muralhas. */
+    public void mountainRidge(int minX, int minZ, int maxX, int maxZ, int refCoord, boolean isZAxis, boolean positiveSlope) {
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                int dist = isZAxis
+                        ? (positiveSlope ? (z - refCoord) : (refCoord - z))
+                        : (positiveSlope ? (x - refCoord) : (refCoord - x));
+                if (dist < 0) continue;
+
+                double factor = Math.min(1.0, dist / 38.0);
+                double wave = Math.sin(x * 0.09) * 7.0 + Math.cos(z * 0.09) * 7.0 + Math.sin((x + z) * 0.14) * 4.0;
+                int peak = (int) (64 + (factor * 44.0) + wave);
+                if (peak < 64) peak = 64;
+
+                // Preenchimento de rocha
+                for (int y = 64; y <= peak; y++) {
+                    pos.set(x, y, z);
+                    if (y == peak && peak >= 100) {
+                        set(pos, Blocks.SNOW_BLOCK);
+                    } else if (y == peak && peak >= 84) {
+                        set(pos, (x + z) % 3 == 0 ? Blocks.CALCITE : Blocks.STONE);
+                    } else if (y == peak) {
+                        set(pos, Blocks.GRASS_BLOCK);
+                    } else if (y >= peak - 3 && peak < 84) {
+                        set(pos, Blocks.DIRT);
+                    } else {
+                        set(pos, (y + x) % 5 == 0 ? Blocks.ANDESITE : Blocks.STONE);
+                    }
+                }
+
+                // Árvores de pinheiro nas encostas médias e baixas
+                if (peak >= 66 && peak <= 82 && Math.abs(x * 37 + z * 19) % 38 == 0) {
+                    tree(x, peak + 1, z, 5 + ((x + z) % 3), Blocks.SPRUCE_LOG, Blocks.SPRUCE_LEAVES);
+                }
+            }
+        }
+    }
+
+    /** Monumento da Espada Colossal de Titã cravada na rocha sagrada (18 blocos de altura). */
+    public void giantSwordMonument(int cx, int cy, int cz) {
+        // Rochede de ancoragem em ardósia profunda e tufo
+        for (int dy = 0; dy <= 4; dy++) {
+            int rad = 5 - dy;
+            for (int dx = -rad; dx <= rad; dx++) {
+                for (int dz = -rad; dz <= rad; dz++) {
+                    if (dx * dx + dz * dz <= rad * rad) {
+                        set(cx + dx, cy + dy, cz + dz, (dx + dz) % 2 == 0 ? Blocks.DEEPSLATE : Blocks.TUFF);
+                    }
+                }
+            }
+        }
+
+        // Lâmina de ferro e quartzo (cy + 2 a cy + 18)
+        for (int y = cy + 2; y <= cy + 18; y++) {
+            set(cx, y, cz, Blocks.IRON_BLOCK);
+            set(cx - 1, y, cz, Blocks.SMOOTH_QUARTZ);
+            set(cx + 1, y, cz, Blocks.SMOOTH_QUARTZ);
+            // Runas arcanas luminosas na lâmina
+            if (y % 4 == 0) {
+                set(cx, y, cz, Blocks.AMETHYST_BLOCK);
+            } else if (y == cy + 10) {
+                set(cx, y, cz, Blocks.SEA_LANTERN);
+            }
+        }
+
+        // Guarda-Mão da Espada (Crossguard em cy + 19)
+        for (int dx = -3; dx <= 3; dx++) {
+            set(cx + dx, cy + 19, cz, Blocks.GOLD_BLOCK);
+        }
+        set(cx - 3, cy + 20, cz, Blocks.REDSTONE_BLOCK); // Joia na ponta esquerda
+        set(cx + 3, cy + 20, cz, Blocks.REDSTONE_BLOCK); // Joia na ponta direita
+        set(cx, cy + 19, cz - 1, Blocks.GOLD_BLOCK);
+        set(cx, cy + 19, cz + 1, Blocks.GOLD_BLOCK);
+
+        // Empunhadura (Hilt em cy + 20 a cy + 24)
+        for (int y = cy + 20; y <= cy + 24; y++) {
+            set(cx, y, cz, Blocks.POLISHED_BASALT);
+        }
+
+        // Pomo Dourado (Pommel em cy + 25)
+        set(cx, cy + 25, cz, Blocks.GOLD_BLOCK);
+        set(cx, cy + 26, cz, Blocks.SEA_LANTERN);
+    }
+
+    /** A Esfera Celeste Arcana (Astrolábio/Armilar) no centro da praça. */
+    public void armillarySphere(int cx, int cy, int cz) {
+        // Pedestal de sustentação de quartzo
+        pillar(cx, cy, cy + 4, cz, Blocks.QUARTZ_PILLAR);
+        set(cx - 1, cy + 4, cz, Blocks.QUARTZ_BRICKS);
+        set(cx + 1, cy + 4, cz, Blocks.QUARTZ_BRICKS);
+        set(cx, cy + 4, cz - 1, Blocks.QUARTZ_BRICKS);
+        set(cx, cy + 4, cz + 1, Blocks.QUARTZ_BRICKS);
+
+        int coreY = cy + 8;
+        // Núcleo de Cristal com Sinalizador
+        set(cx, coreY - 1, cz, Blocks.NETHERITE_BLOCK);
+        set(cx, coreY, cz, Blocks.BEACON);
+        set(cx, coreY + 1, cz, Blocks.SEA_LANTERN);
+
+        // Anel Orbital 1: Horizontal (Plano X-Z de Ouro, raio 4)
+        for (int dx = -4; dx <= 4; dx++) {
+            for (int dz = -4; dz <= 4; dz++) {
+                int d2 = dx * dx + dz * dz;
+                if (d2 >= 13 && d2 <= 17) {
+                    set(cx + dx, coreY, cz + dz, Blocks.GOLD_BLOCK);
+                }
+            }
+        }
+
+        // Anel Orbital 2: Vertical X-Y (Prismarinho Escuro, raio 5)
+        for (int dx = -5; dx <= 5; dx++) {
+            for (int dy = -5; dy <= 5; dy++) {
+                int d2 = dx * dx + dy * dy;
+                if (d2 >= 20 && d2 <= 26) {
+                    set(cx + dx, coreY + dy, cz, Blocks.DARK_PRISMARINE);
+                }
+            }
+        }
+
+        // Anel Orbital 3: Vertical Z-Y (Cobre Lapidado, raio 5)
+        for (int dz = -5; dz <= 5; dz++) {
+            for (int dy = -5; dy <= 5; dy++) {
+                int d2 = dz * dz + dy * dy;
+                if (d2 >= 20 && d2 <= 26) {
+                    set(cx, coreY + dy, cz + dz, Blocks.CUT_COPPER);
+                }
+            }
+        }
+    }
+
+    /** Estátua colossal de guardião heróico construída com blocos (8 blocos de altura). */
+    public void guardianStatue(int x, int y, int z, Direction facing, boolean isWarrior) {
+        // Pedestal 3x3
+        fill(x - 1, y, z - 1, x + 1, y, z + 1, Blocks.POLISHED_ANDESITE);
+
+        // Pernas em ardósia polida
+        pillar(x - 1, y + 1, y + 2, z, Blocks.POLISHED_DEEPSLATE);
+        pillar(x + 1, y + 1, y + 2, z, Blocks.POLISHED_DEEPSLATE);
+
+        // Torso / Armadura
+        Block armorBlock = isWarrior ? Blocks.IRON_BLOCK : Blocks.LAPIS_BLOCK;
+        fill(x - 1, y + 3, z, x + 1, y + 4, z, armorBlock);
+        set(x, y + 3, z, Blocks.GOLD_BLOCK); // Brasão central dourado
+
+        // Ombros e Braços
+        set(x - 1, y + 4, z, Blocks.POLISHED_DEEPSLATE_WALL);
+        set(x + 1, y + 4, z, Blocks.POLISHED_DEEPSLATE_WALL);
+
+        // Cabeça e Elmo
+        set(x, y + 5, z, Blocks.CHISELED_STONE_BRICKS);
+        set(x, y + 6, z, Blocks.GOLD_BLOCK); // Coroa/Pluma
+
+        // Arma do Guardião
+        if (isWarrior) {
+            // Grande Lança de Ferro erguida
+            pillar(x + 2, y + 1, y + 6, z, Blocks.IRON_BARS);
+            set(x + 2, y + 7, z, Blocks.IRON_BLOCK);
+        } else {
+            // Cajado Místico com Orbe de Ametista
+            pillar(x + 2, y + 1, y + 5, z, Blocks.END_ROD);
+            set(x + 2, y + 6, z, Blocks.AMETHYST_BLOCK);
+            set(x + 2, y + 7, z, Blocks.SEA_LANTERN);
+        }
+    }
+
+    /** Obelisco de Runa Arcana flutuante com cristal. */
+    public void arcaneMonolith(int x, int y, int z) {
+        set(x, y, z, Blocks.CRYING_OBSIDIAN);
+        pillar(x, y + 2, y + 5, z, Blocks.CHISELED_DEEPSLATE);
+        set(x, y + 3, z, Blocks.AMETHYST_BLOCK);
+        set(x, y + 4, z, Blocks.SEA_LANTERN);
+    }
 }

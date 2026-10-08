@@ -52,19 +52,23 @@ public final class CampusBuildings {
         kit.disc(0, FLOOR_Y, 0, PLAZA_RADIUS, Blocks.POLISHED_ANDESITE);
         kit.ring(0, FLOOR_Y, 0, PLAZA_RADIUS - 2, PLAZA_RADIUS, Blocks.STONE_BRICKS);
         kit.ring(0, FLOOR_Y, 0, 15, 17, Blocks.POLISHED_DIORITE);
-        kit.clear(-PLAZA_RADIUS, G, -PLAZA_RADIUS, PLAZA_RADIUS, G + 5, PLAZA_RADIUS);
+        kit.clear(-PLAZA_RADIUS, G, -PLAZA_RADIUS, PLAZA_RADIUS, G + 16, PLAZA_RADIUS);
 
         // Fonte Central Monumental
         kit.ring(0, G, 0, 8, 8, Blocks.QUARTZ_BRICKS);
         kit.disc(0, FLOOR_Y, 0, 7, Blocks.SEA_LANTERN);
         kit.disc(0, G, 0, 7, Blocks.WATER);
 
-        // Obelisco Central da Fonte
-        kit.pillar(0, G, G + 6, 0, Blocks.QUARTZ_PILLAR);
-        kit.set(0, G + 7, 0, Blocks.SEA_LANTERN);
-        kit.set(0, G + 8, 0, Blocks.GOLD_BLOCK);
+        // A Esfera Celeste Arcana (Astrolábio/Armilar) no coração da academia
+        kit.armillarySphere(0, G, 0);
 
-        // 8 Postes de iluminação ao redor da praça
+        // 4 Estátuas Colossais dos Guardiões Fundadores nos vértices da praça
+        kit.guardianStatue(-17, G, -17, Direction.SOUTH, true);  // Guardião do Norte-Oeste (Guerreiro)
+        kit.guardianStatue(17, G, -17, Direction.SOUTH, false);  // Guardião do Norte-Leste (Arquimago)
+        kit.guardianStatue(-17, G, 17, Direction.NORTH, false);  // Guardião do Sul-Oeste (Alquimista)
+        kit.guardianStatue(17, G, 17, Direction.NORTH, true);   // Guardião do Sul-Leste (Paladino)
+
+        // Bancos e Floreiras ao redor do anel externo
         int r = PLAZA_RADIUS - 2;
         int[][] angles = {
                 {r, 0}, {-r, 0}, {0, r}, {0, -r},
@@ -73,6 +77,9 @@ public final class CampusBuildings {
         };
         for (int[] p : angles) {
             kit.lampPost(p[0], G, p[1]);
+            // Floreiras com azaleias floridas ao lado dos postes
+            kit.setIfAir(p[0] + 1, G, p[1], Blocks.FLOWERING_AZALEA);
+            kit.setIfAir(p[0] - 1, G, p[1], Blocks.FLOWERING_AZALEA);
         }
     }
 
@@ -326,6 +333,16 @@ public final class CampusBuildings {
                 kit.set(x, G, tz + 1, kit.stair(Blocks.SPRUCE_STAIRS, Direction.NORTH));
                 kit.set(x, G, tz - 1, kit.stair(Blocks.SPRUCE_STAIRS, Direction.SOUTH));
             }
+            // Comidas, bolos, velas e louças decorativas nas mesas
+            for (int x = f.minX() + 8; x <= f.maxX() - 16; x += 4) {
+                if ((x + tz) % 4 == 0) {
+                    kit.set(x, G + 1, tz, Blocks.CAKE);
+                } else if ((x + tz) % 4 == 1) {
+                    kit.set(x, G + 1, tz, Blocks.FLOWER_POT);
+                } else if ((x + tz) % 4 == 2) {
+                    kit.set(x, G + 1, tz, Blocks.CANDLE);
+                }
+            }
         }
 
         // Cozinha e balcão na ala leste
@@ -334,9 +351,11 @@ public final class CampusBuildings {
         for (int z = f.minZ() + 3; z <= f.maxZ() - 3; z += 2) {
             kit.set(f.maxX() - 1, G, z, Blocks.SMOKER);
             kit.set(f.maxX() - 1, G + 1, z, Blocks.BARREL);
+            kit.set(f.maxX() - 1, G + 2, z, Blocks.CHEST);
         }
         kit.set(f.maxX() - 2, G, f.minZ() + 2, Blocks.WATER_CAULDRON);
         kit.set(f.maxX() - 2, G, f.maxZ() - 2, Blocks.WATER_CAULDRON);
+        kit.set(kx, G + 1, f.minZ() + 4, Blocks.CAKE);
 
         // Lustres
         for (int x = f.minX() + 8; x <= f.maxX() - 12; x += 10) {
@@ -645,20 +664,29 @@ public final class CampusBuildings {
         kit.gableAlongX(plot.minX() - 1, plot.maxX() + 1, plot.minZ() - 1, plot.maxZ() + 1, G + 13,
                 stairBlock, wallBlock, wallBlock);
 
-        // Quartos com camas, mesas e iluminação em cada andar
+        // Quartos com camas, baús, guarda-roupas, mesas e iluminação em cada andar
         int[] floorLevels = {G, deck2 + 1, deck3 + 1};
+        Block carpetBlock = female ? Blocks.PINK_CARPET : Blocks.LIGHT_BLUE_CARPET;
         for (int fy : floorLevels) {
             // Abertura para escada nos andares superiores
             if (fy > G) {
                 kit.clear(plot.centerX() - 2, fy - 1, plot.minZ() + 2, plot.centerX() + 2, fy - 1, plot.minZ() + 5);
             }
-            // Camas
+            // Camas e mobília de cada quarto
             for (int z = plot.minZ() + 5; z <= plot.maxZ() - 5; z += 6) {
+                // Quarto Lado Oeste
                 kit.bed(plot.minX() + 2, fy, z, Direction.EAST, bedBlock);
+                kit.set(plot.minX() + 1, fy, z, Blocks.CHEST); // Baú aos pés
                 kit.set(plot.minX() + 4, fy, z, ModBlocks.CLASSROOM_DESK.get());
+                kit.set(plot.minX() + 1, fy, z + 1, Blocks.BARREL); // Guarda-roupa
+                kit.set(plot.minX() + 3, fy, z, carpetBlock);
 
+                // Quarto Lado Leste
                 kit.bed(plot.maxX() - 3, fy, z, Direction.WEST, bedBlock);
+                kit.set(plot.maxX() - 1, fy, z, Blocks.CHEST); // Baú aos pés
                 kit.set(plot.maxX() - 5, fy, z, ModBlocks.CLASSROOM_DESK.get());
+                kit.set(plot.maxX() - 1, fy, z + 1, Blocks.BARREL); // Guarda-roupa
+                kit.set(plot.maxX() - 3, fy, z, carpetBlock);
             }
             kit.set(plot.centerX(), fy + 3, plot.centerZ(), Blocks.LANTERN);
         }
@@ -786,5 +814,205 @@ public final class CampusBuildings {
             // Espaço livre acima do terminal
             kit.clear(x, y + 1, z, x, y + 2, z);
         }
+    }
+
+    // =========================================================================
+    // 16. GRANDES MONUMENTOS & SÍMBOLOS DE PODER (ESTÁTUAS E ESPADA SAGRADA)
+    // =========================================================================
+
+    public static void buildMonuments(BlockKit kit) {
+        // Monumento Colossal da Espada Imperial de Titã cravada na rocha
+        kit.giantSwordMonument(SWORD_MONUMENT_X, G, SWORD_MONUMENT_Z);
+
+        // Mureta circular sagrada e tochas das almas em torno da Espada
+        kit.ring(SWORD_MONUMENT_X, G, SWORD_MONUMENT_Z, 6, 6, Blocks.POLISHED_DEEPSLATE_WALL);
+        kit.set(SWORD_MONUMENT_X + 6, G + 1, SWORD_MONUMENT_Z, Blocks.SOUL_TORCH);
+        kit.set(SWORD_MONUMENT_X - 6, G + 1, SWORD_MONUMENT_Z, Blocks.SOUL_TORCH);
+        kit.set(SWORD_MONUMENT_X, G + 1, SWORD_MONUMENT_Z + 6, Blocks.SOUL_TORCH);
+        kit.set(SWORD_MONUMENT_X, G + 1, SWORD_MONUMENT_Z - 6, Blocks.SOUL_TORCH);
+
+        // 4 Grandes Monólitos Rúnicos Flutuantes nas vias principais
+        kit.arcaneMonolith(-40, G, 0);   // Alameda da Biblioteca
+        kit.arcaneMonolith(40, G, 0);    // Alameda do Refeitório
+        kit.arcaneMonolith(0, G, 140);   // Avenida das Docas
+        kit.arcaneMonolith(0, G, -25);   // Avenida do Palácio Central
+    }
+
+    // =========================================================================
+    // 17. RELEVO E TERRAÇOS AJARDINADOS (DESNÍVEIS E VIDA NO CAMPUS)
+    // =========================================================================
+
+    public static void buildTerraces(BlockKit kit) {
+        // Terraço elevado do Jardim Oeste (entre Biblioteca e Laboratório)
+        kit.fill(-80, G, 8, -60, G, 14, Blocks.GRASS_BLOCK);
+        kit.walls(-80, G, 8, -60, G, 14, Blocks.STONE_BRICK_SLAB);
+        for (int x = -78; x <= -62; x += 4) {
+            kit.setIfAir(x, G + 1, 10, Blocks.ROSE_BUSH);
+            kit.setIfAir(x, G + 1, 12, Blocks.LILAC);
+        }
+
+        // Terraço elevado do Jardim Leste (entre Refeitório e Estufa)
+        kit.fill(60, G, 8, 80, G, 14, Blocks.GRASS_BLOCK);
+        kit.walls(60, G, 8, 80, G, 14, Blocks.STONE_BRICK_SLAB);
+        for (int x = 62; x <= 78; x += 4) {
+            kit.setIfAir(x, G + 1, 10, Blocks.PEONY);
+            kit.setIfAir(x, G + 1, 12, Blocks.FLOWERING_AZALEA);
+        }
+    }
+
+    // =========================================================================
+    // 18. CORDILHEIRA MONTANHOSA EXTERNA DO VALE IMPERIAL (BARREIRA CÊNICA)
+    // =========================================================================
+
+    public static void buildMountains(BlockKit kit, int zone) {
+        if (zone == 0) {
+            // Cordilheira Norte (atrás do Grand Hall e da Torre do Relógio)
+            kit.mountainRidge(-260, -225, 260, -171, -171, true, false);
+        } else if (zone == 1) {
+            // Cordilheira Sul (ao lado do Portão Sul e atrás das Docas)
+            // Deixa uma fenda/canyon no meio para o portão e estrada imperial (x = -15 a 15)
+            kit.mountainRidge(-260, 251, -16, 305, 251, true, true);
+            kit.mountainRidge(16, 251, 260, 305, 251, true, true);
+        } else if (zone == 2) {
+            // Cordilheira Oeste (ao lado da Biblioteca, Lab e Arena)
+            kit.mountainRidge(-260, -175, -211, 255, -211, false, false);
+        } else if (zone == 3) {
+            // Cordilheira Leste (ao lado do Refeitório, Estufa e Dojo)
+            kit.mountainRidge(211, -175, 260, 255, 211, false, true);
+        }
+    }
+
+    // =========================================================================
+    // 19. RELEVOS E COLINAS SUAVES INTERNAS DO CAMPUS
+    // =========================================================================
+
+    public static void buildRelief(BlockKit kit, int zMin, int zMax) {
+        Plot w = WALL;
+        for (int x = w.minX() + 10; x <= w.maxX() - 10; x += 3) {
+            for (int z = zMin; z <= zMax; z += 3) {
+                if (z < w.minZ() + 10 || z > w.maxZ() - 10) continue;
+                if (CampusLayout.isReserved(x, z)) continue;
+
+                int seed = Math.abs(x * 37 + z * 19);
+                if (seed % 10 < 3) {
+                    // Elevação suave de 1 bloco
+                    kit.disc(x, G, z, 3, Blocks.GRASS_BLOCK);
+                    kit.disc(x, FLOOR_Y, z, 3, Blocks.DIRT);
+                    kit.setIfAir(x, G + 1, z, (seed % 2 == 0) ? Blocks.DANDELION : Blocks.POPPY);
+                }
+            }
+        }
+    }
+
+    // =========================================================================
+    // 20. JARDINS VIVOS, GAZEBOS, LAGOS E PIQUENIQUES
+    // =========================================================================
+
+    public static void buildGardensAndPonds(BlockKit kit) {
+        // 3 Lagos Cenográficos com vitórias-régias e cana-de-açúcar
+        createPond(kit, -150, 40);
+        createPond(kit, 150, 40);
+        createPond(kit, -40, 145);
+
+        // 2 Gazebos de descanso com lanternas suspensas
+        createGazebo(kit, 155, -20);
+        createGazebo(kit, -155, -20);
+
+        // Áreas de piquenique com toalhas xadrez e bolos
+        createPicnic(kit, 35, -30);
+        createPicnic(kit, -35, 130);
+    }
+
+    private static void createPond(BlockKit kit, int cx, int cz) {
+        kit.disc(cx, FLOOR_Y, cz, 4, Blocks.CLAY);
+        kit.disc(cx, FLOOR_Y, cz, 3, Blocks.WATER);
+        kit.ring(cx, FLOOR_Y, cz, 4, 5, Blocks.SAND);
+        kit.setIfAir(cx - 1, G, cz, Blocks.LILY_PAD);
+        kit.setIfAir(cx + 1, G, cz + 1, Blocks.LILY_PAD);
+        kit.setIfAir(cx + 4, G, cz, Blocks.SUGAR_CANE);
+        kit.setIfAir(cx - 4, G, cz, Blocks.SUGAR_CANE);
+        kit.setIfAir(cx + 5, G, cz + 2, Blocks.MOSSY_COBBLESTONE);
+    }
+
+    private static void createGazebo(BlockKit kit, int cx, int cz) {
+        kit.disc(cx, FLOOR_Y, cz, 3, Blocks.STONE_BRICKS);
+        for (int dx : new int[]{-3, 3}) {
+            for (int dz : new int[]{-3, 3}) {
+                kit.pillar(cx + dx, G, G + 3, cz + dz, Blocks.DARK_OAK_LOG);
+            }
+        }
+        kit.hipRoof(cx - 4, cz - 4, cx + 4, cz + 4, G + 4, Blocks.DARK_OAK_STAIRS, Blocks.DARK_OAK_PLANKS, Blocks.GLOWSTONE);
+        kit.set(cx, G, cz, Blocks.OAK_FENCE);
+        kit.set(cx, G + 1, cz, Blocks.SPRUCE_PRESSURE_PLATE);
+        kit.set(cx - 1, G, cz + 1, kit.stair(Blocks.OAK_STAIRS, Direction.NORTH));
+        kit.set(cx + 1, G, cz + 1, kit.stair(Blocks.OAK_STAIRS, Direction.NORTH));
+        kit.set(cx, G + 3, cz, Blocks.LANTERN.defaultBlockState().setValue(net.minecraft.world.level.block.LanternBlock.HANGING, true));
+    }
+
+    private static void createPicnic(BlockKit kit, int cx, int cz) {
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                kit.set(cx + dx, G, cz + dz, ((dx + dz) % 2 == 0) ? Blocks.RED_CARPET : Blocks.WHITE_CARPET);
+            }
+        }
+        kit.set(cx + 2, G, cz, Blocks.BARREL);
+        kit.set(cx, G, cz, Blocks.CAKE);
+    }
+
+    // =========================================================================
+    // 21. TRILHA DO PORTÃO SUL E MIRANTE DO FIM DO VALE
+    // =========================================================================
+
+    public static void buildSouthPass(BlockKit kit) {
+        // Trilha de pedra e cascalho
+        kit.fill(-2, FLOOR_Y, 251, 2, FLOOR_Y, 296, Blocks.STONE_BRICKS);
+        kit.fill(-3, FLOOR_Y, 251, -3, FLOOR_Y, 296, Blocks.GRAVEL);
+        kit.fill(3, FLOOR_Y, 251, 3, FLOOR_Y, 296, Blocks.GRAVEL);
+        for (int z = 258; z <= 294; z += 12) {
+            kit.lampPost(-4, G, z);
+            kit.lampPost(4, G, z);
+        }
+
+        // Arco de boas-vindas
+        kit.pillar(-4, G, G + 5, 254, Blocks.POLISHED_BLACKSTONE_BRICKS);
+        kit.pillar(4, G, G + 5, 254, Blocks.POLISHED_BLACKSTONE_BRICKS);
+        kit.fill(-4, G + 6, 254, 4, G + 6, 254, Blocks.POLISHED_BLACKSTONE_BRICKS);
+        kit.set(0, G + 7, 254, Blocks.SEA_LANTERN);
+
+        // Mirante circular
+        kit.disc(0, FLOOR_Y, 274, 8, Blocks.POLISHED_DEEPSLATE);
+        kit.ring(0, FLOOR_Y, 274, 7, 8, Blocks.STONE_BRICKS);
+        kit.ring(0, G, 274, 7, 7, Blocks.POLISHED_DEEPSLATE_WALL);
+        kit.clear(-1, G, 266, 1, G, 267);
+
+        // Bancos e floreiras
+        kit.set(-2, G, 278, kit.stair(Blocks.DARK_OAK_STAIRS, Direction.SOUTH));
+        kit.set(2, G, 278, kit.stair(Blocks.DARK_OAK_STAIRS, Direction.SOUTH));
+        kit.lampPost(-5, G, 272);
+        kit.lampPost(5, G, 272);
+        kit.setIfAir(-4, G, 276, Blocks.POTTED_FLOWERING_AZALEA);
+        kit.setIfAir(4, G, 276, Blocks.POTTED_FLOWERING_AZALEA);
+    }
+
+    // =========================================================================
+    // 22. BARREIRA FÍSICA INVISÍVEL NO LIMITE DAS MONTANHAS
+    // =========================================================================
+
+    public static void buildBarrier(BlockKit kit) {
+        int half = BORDER_SIZE / 2;
+        int minZ = BORDER_CENTER_Z - half;
+        int maxZ = BORDER_CENTER_Z + half;
+        int minX = BORDER_CENTER_X - half;
+        int maxX = BORDER_CENTER_X + half;
+
+        // Paredes de BARRIER bloqueando a saída da dimensão do chão ao céu
+        kit.fill(minX, 62, minZ, maxX, 150, minZ, Blocks.BARRIER);
+        kit.fill(minX, 62, maxZ, maxX, 150, maxZ, Blocks.BARRIER);
+        kit.fill(minX, 62, minZ, minX, 150, maxZ, Blocks.BARRIER);
+        kit.fill(maxX, 62, minZ, maxX, 150, maxZ, Blocks.BARRIER);
+
+        // Pedras de fronteira luminosas na trilha do sul
+        kit.set(0, FLOOR_Y, maxZ - 4, Blocks.POLISHED_BLACKSTONE);
+        kit.set(0, G, maxZ - 4, Blocks.SEA_LANTERN);
     }
 }

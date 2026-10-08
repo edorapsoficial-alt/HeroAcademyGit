@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Planta oficial do Campus da Academia Imperial Destiny.
- * Todas as coordenadas do campus (construção, zonas, teleportes, spawn) partem daqui.
+ * Todas as coordenadas do campus (construção, zonas, teleportes, spawn, relevos e montanhas) partem daqui.
  * Eixos: +X leste, +Z sul. O Hall fica ao norte e as Docas ao sul.
  */
 public final class CampusLayout {
@@ -27,9 +27,14 @@ public final class CampusLayout {
     public static final int DOCKS_CENTER_Z = 186;
     public static final int DOCKS_RADIUS = 18;
 
+    /** Borda do mundo configurada no cume das cordilheiras externas (impede travessia ao infinito). */
     public static final int BORDER_CENTER_X = 0;
     public static final int BORDER_CENTER_Z = 40;
-    public static final int BORDER_SIZE = 440;
+    public static final int BORDER_SIZE = 520;
+
+    /** Posições de monumentos construídos com blocos */
+    public static final int SWORD_MONUMENT_X = 0;
+    public static final int SWORD_MONUMENT_Z = 88;
 
     public record Plot(int minX, int minZ, int maxX, int maxZ) {
         public int centerX() { return (minX + maxX) / 2; }
@@ -89,7 +94,7 @@ public final class CampusLayout {
             new Plot(-49, 113, -3, 117)     // acesso à arena esportiva
     );
 
-    /** Verdadeiro se (x,z) está dentro de um prédio, estrada, praça ou doca (com folga). */
+    /** Verdadeiro se (x,z) está dentro de um prédio, estrada, praça, doca ou monumento (com folga). */
     public static boolean isReserved(int x, int z) {
         for (Plot b : BUILDINGS) {
             if (b.contains(x, z, 6)) return true;
@@ -99,6 +104,9 @@ public final class CampusLayout {
         }
         if (x * x + z * z <= (PLAZA_RADIUS + 4) * (PLAZA_RADIUS + 4)) return true;
         int dz = z - DOCKS_CENTER_Z;
-        return x * x + dz * dz <= (DOCKS_RADIUS + 4) * (DOCKS_RADIUS + 4);
+        if (x * x + dz * dz <= (DOCKS_RADIUS + 4) * (DOCKS_RADIUS + 4)) return true;
+        // Reserva para o Monumento da Espada Gigante
+        if (Math.abs(x - SWORD_MONUMENT_X) <= 12 && Math.abs(z - SWORD_MONUMENT_Z) <= 12) return true;
+        return false;
     }
 }
