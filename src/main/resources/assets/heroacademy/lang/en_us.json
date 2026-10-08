@@ -1,0 +1,38 @@
+{
+  "item.heroacademy.student_id_card": "Student ID Card",
+  "item.heroacademy.magic_tome": "Grimoire of Magic Studies",
+  "block.heroacademy.classroom_desk": "Classroom Exam Desk",
+  "itemGroup.hero_academy_tab": "Hero Academy",
+  "key.categories.heroacademy": "Hero Academy",
+  "key.heroacademy.ability_z": "Primary Ability [Z]",
+  "key.heroacademy.ability_x": "Secondary / Dash Ability [X]",
+  "key.heroacademy.ability_c": "Tactical / Defense Ability [C]",
+  "key.heroacademy.ability_v": "Area Impact Ability [V]",
+  "key.heroacademy.ability_g": "Supreme Awakening [G]",
+  "key.heroacademy.open_menu": "Student Sheet & Trees [K]",
+
+  "item.heroacademy.training_spear": "Training Spear",
+  "item.heroacademy.iron_spear": "Iron Spear",
+  "item.heroacademy.diamond_spear": "Diamond Spear",
+  "item.heroacademy.netherite_spear": "Netherite Spear",
+
+  "item.heroacademy.training_katana": "Training Katana",
+  "item.heroacademy.iron_katana": "Iron Katana",
+  "item.heroacademy.diamond_katana": "Diamond Katana",
+  "item.heroacademy.netherite_katana": "Netherite Katana",
+
+  "item.heroacademy.training_tonfa": "Training Tonfa",
+  "item.heroacademy.iron_tonfa": "Iron Tonfa",
+  "item.heroacademy.diamond_tonfa": "Diamond Tonfa",
+  "item.heroacademy.netherite_tonfa": "Netherite Tonfa",
+
+  "item.heroacademy.training_scythe": "Training Scythe",
+  "item.heroacademy.iron_scythe": "Iron Scythe",
+  "item.heroacademy.diamond_scythe": "Diamond Scythe",
+  "item.heroacademy.netherite_scythe": "Netherite Scythe",
+
+  "item.heroacademy.imperial_credit": "Imperial Credit",
+  "block.heroacademy.imperial_transit_terminal": "Arcanotech Transit Terminal",
+  "item.heroacademy.imperial_transit_terminal": "Arcanotech Transit Terminal",
+  "item.heroacademy.campus_compass": "Academy Guide Compass"
+}

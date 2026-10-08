@@ -1,0 +1,38 @@
+{
+  "item.heroacademy.student_id_card": "Crachá de Estudante",
+  "item.heroacademy.magic_tome": "Grimório de Estudos Mágicos",
+  "block.heroacademy.classroom_desk": "Carteira Escolar de Exame",
+  "itemGroup.hero_academy_tab": "Hero Academy",
+  "key.categories.heroacademy": "Hero Academy",
+  "key.heroacademy.ability_z": "Habilidade Primária [Z]",
+  "key.heroacademy.ability_x": "Habilidade Secundária / Dash [X]",
+  "key.heroacademy.ability_c": "Habilidade Tática / Defesa [C]",
+  "key.heroacademy.ability_v": "Habilidade em Área [V]",
+  "key.heroacademy.ability_g": "Despertar Supremo [G]",
+  "key.heroacademy.open_menu": "Ficha do Aluno & Árvores [K]",
+
+  "item.heroacademy.training_spear": "Lança de Treino",
+  "item.heroacademy.iron_spear": "Lança de Ferro",
+  "item.heroacademy.diamond_spear": "Lança de Diamante",
+  "item.heroacademy.netherite_spear": "Lança de Netherite",
+
+  "item.heroacademy.training_katana": "Katana de Treino",
+  "item.heroacademy.iron_katana": "Katana de Ferro",
+  "item.heroacademy.diamond_katana": "Katana de Diamante",
+  "item.heroacademy.netherite_katana": "Katana de Netherite",
+
+  "item.heroacademy.training_tonfa": "Tonfa de Treino",
+  "item.heroacademy.iron_tonfa": "Tonfa de Ferro",
+  "item.heroacademy.diamond_tonfa": "Tonfa de Diamante",
+  "item.heroacademy.netherite_tonfa": "Tonfa de Netherite",
+
+  "item.heroacademy.training_scythe": "Foice de Treino",
+  "item.heroacademy.iron_scythe": "Foice de Ferro",
+  "item.heroacademy.diamond_scythe": "Foice de Diamante",
+  "item.heroacademy.netherite_scythe": "Foice de Netherite",
+
+  "item.heroacademy.imperial_credit": "Crédito Imperial",
+  "block.heroacademy.imperial_transit_terminal": "Terminal de Trânsito Arcantécnico",
+  "item.heroacademy.imperial_transit_terminal": "Terminal de Trânsito Arcantécnico",
+  "item.heroacademy.campus_compass": "Bússola Guia da Academia"
+}
