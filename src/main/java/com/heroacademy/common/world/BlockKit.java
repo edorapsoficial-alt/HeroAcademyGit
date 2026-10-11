@@ -177,95 +177,9 @@ public class BlockKit {
             y++;
         }
 
-    }
-
-    /**
-     * Telhado de duas águas avançado com beiral projetado de 1 bloco e acabamento inferior
-     * com escadas invertidas (Half.TOP) sustentando as águas do telhado.
-     */
-    public void overhangGableRoofAlongX(int minX, int maxX, int minZ, int maxZ, int startY, Block stairBlock, Block ridgeBlock, Block fillBlock) {
-        int eMinX = minX - 1;
-        int eMaxX = maxX + 1;
-        int zN = minZ - 1;
-        int zS = maxZ + 1;
-        int y = startY;
-
-        // Escadas invertidas sustentando a primeira fiada dos beirais externos (eaves trim)
-        fill(eMinX, y - 1, zN, eMaxX, y - 1, zN, stair(stairBlock, Direction.NORTH, Half.TOP));
-        fill(eMinX, y - 1, zS, eMaxX, y - 1, zS, stair(stairBlock, Direction.SOUTH, Half.TOP));
-
-        while (zN < zS) {
-            // Escada norte subindo para o sul
-            fill(eMinX, y, zN, eMaxX, y, zN, stair(stairBlock, Direction.SOUTH, Half.BOTTOM));
-            // Escada sul subindo para o norte
-            fill(eMinX, y, zS, eMaxX, y, zS, stair(stairBlock, Direction.NORTH, Half.BOTTOM));
-
-            // Preenchimento interno sob o telhado
-            if (zN + 1 <= zS - 1 && fillBlock != null) {
-                fill(minX, y, zN + 1, maxX, y, zS - 1, fillBlock.defaultBlockState());
-            }
-
-            zN++;
-            zS--;
-            y++;
-        }
-
         if (zN == zS) {
-            // Cumeeira
-            Block r = (ridgeBlock != null) ? ridgeBlock : stairBlock;
-            fill(eMinX, y, zN, eMaxX, y, zS, r.defaultBlockState());
-            fill(eMinX, y + 1, zN, eMaxX, y + 1, zS, slab(Blocks.DEEPSLATE_TILE_SLAB));
+            fill(minX, y, zN, maxX, y, zS, ridgeBlock != null ? ridgeBlock.defaultBlockState() : stairBlock.defaultBlockState());
         }
-    }
-
-    /**
-     * Janela emoldurada com profundidade 3D (peitoril inferior, arco/lintel superior invertido e vidraça recuada).
-     */
-    public void framedWindow(int x, int y, int z, int height, Direction facing, Block stairBlock, Block paneBlock) {
-        set(x, y, z, stair(stairBlock, facing.getOpposite(), Half.BOTTOM));
-        for (int h = 1; h <= height; h++) {
-            set(x, y + h, z, paneBlock.defaultBlockState());
-        }
-        set(x, y + height + 1, z, stair(stairBlock, facing, Half.TOP));
-    }
-
-    /**
-     * Pórtico de entrada saliente com colunas, frontão e iluminação.
-     */
-    public void entryPortico(int cx, int floorY, int zFront, Direction facing, Block pillarBlock, Block stairBlock, Block accentBlock) {
-        int leftX = (facing == Direction.SOUTH || facing == Direction.NORTH) ? cx - 3 : cx;
-        int rightX = (facing == Direction.SOUTH || facing == Direction.NORTH) ? cx + 3 : cx;
-        int pZ = zFront + facing.getStepZ();
-
-        // Colunas avançadas 1 bloco
-        pillar(leftX, floorY + 1, floorY + 6, pZ, pillarBlock);
-        pillar(rightX, floorY + 1, floorY + 6, pZ, pillarBlock);
-
-        // Capitéis em escada invertida
-        set(leftX, floorY + 6, pZ, stair(stairBlock, facing, Half.TOP));
-        set(rightX, floorY + 6, pZ, stair(stairBlock, facing, Half.TOP));
-
-        // Frontão superior
-        fill(leftX, floorY + 7, pZ, rightX, floorY + 7, pZ, accentBlock);
-        set(cx, floorY + 8, pZ, stair(stairBlock, facing, Half.BOTTOM));
-        set(cx, floorY + 6, pZ, Blocks.LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, true));
-    }
-
-    /**
-     * Lucarna (Dormer) que salienta da água do telhado com janela e mini-frontão.
-     */
-    public void dormerWindow(int x, int y, int z, Direction facing, Block wallBlock, Block stairBlock, Block paneBlock) {
-        int dx = (facing == Direction.NORTH || facing == Direction.SOUTH) ? 1 : 0;
-        int dz = (facing == Direction.EAST || facing == Direction.WEST) ? 1 : 0;
-
-        fill(x - dx, y, z - dz, x - dx, y + 2, z - dz, wallBlock);
-        fill(x + dx, y, z + dz, x + dx, y + 2, z + dz, wallBlock);
-
-        set(x, y + 1, z, paneBlock);
-
-        set(x - dx, y + 3, z - dz, stair(stairBlock, facing == Direction.SOUTH ? Direction.EAST : Direction.WEST));
-        set(x + dx, y + 3, z + dz, stair(stairBlock, facing == Direction.SOUTH ? Direction.WEST : Direction.EAST));
-        set(x, y + 3, z, wallBlock);
     }
 
     /** Telhado de quatro águas em pirâmide/hip roof. */
